@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'base'
+group = 'selenium.webdriver.qa'
+
+project.version = project.properties.releaseVersion ?: "0.0.1-SNAPSHOT"
+
+task createGradleWrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+    scriptFile = 'gradleWrapper' 
+    jarFile = 'gradle-bin.jar' 
+    distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14-bin.zip'
+}
+
+jar {
+ manifest {
+  attributes 'Implementation-Title': 'acceptance-tests', 'Implementation-Version': version
+ }
+}
+
+repositories {
+    	mavenCentral()
+    	jcenter()
+    }
+
+dependencies {
+
+	//Dependent jars
+	compile group: 'in.ashwanthkumar', name: 'slack-java-webhook', version: '0.0.7'
+	compile group: 'com.ullink.slack', name: 'simpleslackapi', version: '0.6.0'
+}
+
+eclipse {
+    project {
+        comment = 'slackbot'
+    }
+    classpath {
+        downloadSources = true
+    }
+}
