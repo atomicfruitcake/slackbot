@@ -1,14 +1,13 @@
 package main;
 
 import static common.Properties.SLACK_BOT_ERROR;
+import static common.Properties.SLACK_BOT_HELP;
+import static common.Properties.SLACK_BOT_ID;
 import static common.Properties.SLACK_BOT_TOKEN;
+import static common.Properties.SLACK_BOT_JOKES;
+import static common.Properties.SLACK_BOT_STATUS;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import com.ullink.slack.simpleslackapi.SlackAttachment;
@@ -28,9 +27,11 @@ public class SlackBot {
     private static final Logger LOGGER = Logger.getLogger(SlackBot.class
 	    .getName());
 
-    static String[] commands;
     static SlackSession session;
     static SlackChannel slackChannel;
+    public static SlackUser slackUser;
+    static String[] splitMessage;
+    static String command;
 
     // Creates a webSocket connection to a Slack instance
     public static void slackSession() throws IOException {
@@ -51,10 +52,11 @@ public class SlackBot {
 		try {
 		    slackChannel = event.getChannel();
 		} catch (Exception e) {
-		    LOGGER.info("ERROR GETTING SLACK CHANNEL");
+		    LOGGER.info("Error reading slack channel");
 		    e.printStackTrace();
 		}
-		if (event.getMessageContent().contains("testbotID")) {
+		if (event.getMessageContent().contains(SLACK_BOT_ID)) {
+		    slackUser = event.getSender();
 		    runTestbotSlackOnEvent(event);
 		}
 	    }
@@ -69,6 +71,16 @@ public class SlackBot {
 	    session.disconnect();
 	} catch (IOException e) {
 	    LOGGER.info("Error closing connection to Slack");
+	    e.printStackTrace();
+	}
+    }
+
+    // Reconnects to an existing session
+    public static void reconnectSlackSession() {
+	try {
+	    session.connect();
+	} catch (IOException e) {
+	    LOGGER.info("Error reconnecting to Slack");
 	    e.printStackTrace();
 	}
     }
@@ -116,6 +128,7 @@ public class SlackBot {
     // Splits a slack message by spaces
     public static String[] splitSlackMessageForTestbot(String slackMessage) {
 	try {
+	    System.out.println("SLACK MESSAGE IS : " + slackMessage);
 	    return slackMessage.split("\\s+");
 	} catch (Exception e) {
 	    LOGGER.info("Slack command did not include sufficient information");
@@ -124,15 +137,15 @@ public class SlackBot {
 	}
     }
 
+    // Sends a response to slack channel based on commands sent to slackbot
     public static void readSlackMessage(String slackMessage) {
-	String[] splitMessage = splitSlackMessageForTestbot(slackMessage);
-	for (int i = 0; i <= splitMessage.length; i++) {
+	LOGGER.info("Responding to Slack Message : " + slackMessage);
 
-	    try {
-		commands[i] = splitMessage[i].toLowerCase();
-	    } catch (Exception e) {
-		commands[i] = null;
-	    }
+	splitMessage = splitSlackMessageForTestbot(slackMessage);
+	try {
+	    command = splitMessage[1].toLowerCase();
+	} catch (Exception e) {
+	    command = null;
 	}
     }
 
@@ -141,7 +154,7 @@ public class SlackBot {
 	    throws IOException {
 	LOGGER.info("Responding to Slack Message : " + slackMessage);
 	readSlackMessage(slackMessage);
-	switch (commands[0]) {
+	switch (command) {
 
 	case "foo": {
 	    sendMessageToAChannel("bar");
@@ -149,31 +162,60 @@ public class SlackBot {
 	}
 
 	case "hi": {
-	    sendMessageToAChannel("Hi");
-	    break;
-	}
-
-	case "call": {
-	    sendMessageToAChannel("Response");
+	    sendMessageToAChannel("Hi " + slackUser.getUserName() + " :wave:");
 	    break;
 	}
 
 	case "help": {
-	    sendMessageToAChannel("Enter help message here");
+	    sendMessageToAChannel(SLACK_BOT_HELP);
 	    break;
 	}
 
 	case "reset": {
 	    sendMessageToAChannel("Resetting my settings, let's hope this fixes me");
-	    SlackBotTestRunner.resetSlackTestBot();
+	    SlackBotFunctions.resetSlackBot();
 	    sendMessageToAChannel("I've successfully reset myself");
 	    break;
 	}
-	default: {
-	}
-	    sendMessageToAChannel(SLACK_BOT_ERROR[(int) Math.random()
-		    * SLACK_BOT_ERROR.length]);
+
+	case "resethard": {
+	    sendMessageToAChannel("Performing Reset 2: Reset Harder \n"
+		    + "Turning myself off and on again");
+	    SlackBotFunctions.hardResetSlackBot();
+	    sendMessageToAChannel("I've successfully turned myself off and on again");
 	    break;
+	}
+
+	case "reverse": {
+	    sendMessageToAChannel(new StringBuilder(splitMessage[2]).reverse()
+		    .toString());
+	    break;
+	}
+
+	case "dude": {
+	    sendMessageToAChannel("sweet");
+	    break;
+	}
+
+	case "sweet": {
+	    sendMessageToAChannel("dude");
+	    break;
+	}
+
+	case "tellmeajoke": {
+	    sendMessageToAChannel(SLACK_BOT_JOKES[(int) (Math.random() * SLACK_BOT_JOKES.length)]);
+	    break;
+	}
+
+	case "howareyou": {
+	    sendMessageToAChannel(SLACK_BOT_STATUS[(int) (Math.random() * SLACK_BOT_STATUS.length)]);
+	    break;
+	}
+
+	default: {
+	    sendMessageToAChannel(SLACK_BOT_ERROR[1 + (int) ((Math.random() * SLACK_BOT_ERROR.length))]);
+	    break;
+	}
 	}
     }
 
