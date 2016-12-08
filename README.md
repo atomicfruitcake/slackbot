@@ -20,15 +20,19 @@ The slackbot should respond with 'bar'. There are a few other simple commands pr
 
 ## Building new commands
 Building new commands with slackbot is done in the **src/main/SlackBot.java** file. The sendResponseToSlack is where all the commands are seperated as cases. For example if I wanted the slack bot to send a *reponse* when I sent it a *call*, I would add the following case to the switch.
+
 ```java
 case "call": {
 	    sendMessageToAChannel("response");
 	    break;
 	}
 ```java
+
 It is inside this case where you implement for complex tasks for the slackbot perform. The slackbot command can be appended by any number of flags or messages. For example, you could have a input such as:
+
 ```
 @slackbot deploy 1.0.0 to production
 ```
+
 Where the version and environment are saved as flags inside the ```splitMessage[]`` string array. 
 
