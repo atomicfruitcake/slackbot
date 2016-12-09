@@ -26,13 +26,11 @@ case "call": {
 	    sendMessageToAChannel("response");
 	    break;
 	}
-```java
+```
 
 It is inside this case where you implement for complex tasks for the slackbot perform. The slackbot command can be appended by any number of flags or messages. For example, you could have a input such as:
 
 ```
 @slackbot deploy 1.0.0 to production
 ```
-
-Where the version and environment are saved as flags inside the ```splitMessage[]`` string array. 
-
+Where the version and environment are saved as flags inside the ```splitMessage[]``` string array. 
