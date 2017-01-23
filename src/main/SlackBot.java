@@ -10,6 +10,8 @@ import static common.Properties.SLACK_BOT_STATUS;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import org.testng.Assert;
+
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackPreparedMessage;
@@ -189,6 +191,67 @@ public class SlackBot {
 	case "reverse": {
 	    sendMessageToAChannel(new StringBuilder(splitMessage[2]).reverse()
 		    .toString());
+	    break;
+	}
+
+	case "add": {
+	    try {
+		Assert.assertEquals(splitMessage[3], "+");
+		sendMessageToAChannel(Integer.toString((Integer
+			.parseInt(splitMessage[2]) + Integer
+			.parseInt(splitMessage[4]))));
+		break;
+	    } catch (Exception e) {
+		LOGGER.severe("Failed to read " + command + " command");
+		e.printStackTrace();
+		break;
+	    }
+	}
+
+	case "minus": {
+	    try {
+		Assert.assertEquals(splitMessage[3], "-");
+		sendMessageToAChannel(Integer.toString((Integer
+			.parseInt(splitMessage[2]) - Integer
+			.parseInt(splitMessage[4]))));
+		break;
+	    } catch (Exception e) {
+		LOGGER.severe("Failed to read " + command + " command");
+		e.printStackTrace();
+		break;
+	    }
+	}
+
+	case "multiply": {
+	    try {
+		Assert.assertEquals(splitMessage[3], "*");
+		sendMessageToAChannel(Integer.toString((Integer
+			.parseInt(splitMessage[2]) * Integer
+			.parseInt(splitMessage[4]))));
+		break;
+	    } catch (Exception e) {
+		LOGGER.severe("Failed to read " + command + " command");
+		e.printStackTrace();
+		break;
+	    }
+	}
+
+	case "divide": {
+	    try {
+		Assert.assertEquals(splitMessage[3], "/");
+		sendMessageToAChannel(Integer.toString((Integer
+			.parseInt(splitMessage[2]) / Integer
+			.parseInt(splitMessage[4]))));
+		break;
+	    } catch (Exception e) {
+		LOGGER.severe("Failed to read " + command + " command");
+		e.printStackTrace();
+		break;
+	    }
+	}
+
+	case "chucknorris": {
+	    sendMessageToAChannel(SlackBotFunctions.getChuckNorrisJoke());
 	    break;
 	}
 

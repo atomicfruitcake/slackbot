@@ -12,7 +12,7 @@ public class RunSlackBot {
     private static final Logger LOGGER = Logger
 	    .getLogger(RunSlackBot.class.getName());
     
-    public static void main() {
+    public static void main(String[] args) {
 	try {
 	    SlackBot.slackSession();
 	    SlackBot.registerAListener();
