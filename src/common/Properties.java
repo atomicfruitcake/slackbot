@@ -13,7 +13,7 @@ public class Properties {
 	    + "Setting 1"
 	    + "Setting 2";
     public static final String SETTINGS_FILE = "settings.txt";
-    public static final String SLACK_BOT_TOKEN = "xoxb-110395375078-iMfusaE5wuk1iZ1t2c0eKRad";
+    public static final String SLACK_BOT_TOKEN = "";
     public static final String SLACK_BOT_ID = "";
     public static final String[] SLACK_BOT_CONFIRMATION = new String[] {
 	    "Sure thing, ", "I'm on it, ", "No problem, " };
