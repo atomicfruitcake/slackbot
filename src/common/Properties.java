@@ -15,6 +15,7 @@ public class Properties {
     public static final String SETTINGS_FILE = "settings.txt";
     public static final String SLACK_BOT_TOKEN = "";
     public static final String SLACK_BOT_ID = "";
+	public static final String SLACK_BOT_NAME = "";
     public static final String[] SLACK_BOT_CONFIRMATION = new String[] {
 	    "Sure thing, ", "I'm on it, ", "No problem, " };
     public static final String[] SLACK_BOT_ERROR = new String[] {
